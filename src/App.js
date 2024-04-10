@@ -16,7 +16,7 @@ const App = () => {
 
   const sendRequest = async (index) => {
     try {
-      const response = await axios.post('/api', { index });
+      const response = await axios.post('http://localhost:5000//api', { index });
       setResponses(prevResponses => [...prevResponses, response.data.index]);
     } catch (error) {
       console.error('Error:', error.response.data);
