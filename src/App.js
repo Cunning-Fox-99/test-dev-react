@@ -1,25 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import axios from 'axios';
 
-function App() {
+const App = () => {
+  const [inputValue, setInputValue] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [responses, setResponses] = useState([]);
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    for (let i = 1; i <= 1000; i++) {
+      await sendRequest(i);
+    }
+    setLoading(false);
+  };
+
+  const sendRequest = async (index) => {
+    try {
+      const response = await axios.post('/api', { index });
+      setResponses(prevResponses => [...prevResponses, response.data.index]);
+    } catch (error) {
+      console.error('Error:', error.response.data);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div>
+        <input
+            type="number"
+            min="0"
+            max="100"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+        />
+        <button onClick={handleSubmit} disabled={loading || !inputValue}>Start</button>
+        <ul>
+          {responses.map((index, i) => (
+              <li key={i}>Request {index}</li>
+          ))}
+        </ul>
+      </div>
   );
-}
+};
 
 export default App;
